@@ -10,8 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
+  passwordHash String
+  loglines     Logline[]
+}
+
 model Logline {
   id         String   @id @default(uuid())
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   name       String

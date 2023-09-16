@@ -2,6 +2,7 @@ import { redirect, type ActionArgs } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
+import { requireUserId } from "~/utils/session.server";
 
 function validateLoglineContent(content: string) {
   if (content.length < 10) {
@@ -16,6 +17,7 @@ function validateLoglineName(name: string) {
 }
 
 export const action = async ({ request }: ActionArgs) => {
+  const userId = await requireUserId(request);
   const data = await request.formData();
   const name = data.get('name');
   const content = data.get('content');
@@ -41,7 +43,7 @@ export const action = async ({ request }: ActionArgs) => {
     });
   }
 
-  const logline = await db.logline.create({ data: fields })
+  const logline = await db.logline.create({ data: { ...fields, authorId: userId } })
   return redirect(`/loglines/${logline.id}`)
 }
 

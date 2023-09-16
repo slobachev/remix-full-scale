@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Link,
@@ -8,18 +8,21 @@ import {
 
 import stylesUrl from "~/styles/loglines.css";
 import { db } from "~/utils/db.server";
+import { getUser } from "~/utils/session.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesUrl },
 ];
 
-export const loader = async () => {
-  return json({
-    loglineListItems: await db.logline.findMany({
+export const loader = async ({ request }: LoaderArgs) => {
+  const user = await getUser(request);
+  const loglineListItems = await db.logline.findMany({
       orderBy: { createdAt: "desc" },
       select: { id: true, name: true },
       take: 5,
-     }),
+     })
+  return json({
+    loglineListItems, user
   });
 };
 
@@ -40,6 +43,18 @@ export default function LoglinesRoute() {
               <span className="logo-medium">M🤪VIE LOGLINES</span>
             </Link>
           </h1>
+           {data.user ? (
+            <div className="user-info">
+              <span>{`Hi ${data.user.username}`}</span>
+              <form action="/logout" method="post">
+                <button type="submit" className="button">
+                  Logout
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </div>
       </header>
       <main className="loglines-main">
