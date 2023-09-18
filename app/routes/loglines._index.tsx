@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 
 export const loader = async () => {
@@ -9,6 +9,11 @@ export const loader = async () => {
     skip: index,
     take: 1
   })
+  if (!logline) {
+    throw new Response("No random logline found", {
+      status: 404,
+    });
+  }
   return json({ logline });
 };
 
@@ -23,6 +28,25 @@ export default function LoglinesIndexRoute() {
       <Link to={data.logline.id}>
         "{data.logline.name}" Permalink
       </Link>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return (
+      <div className="error-container">
+        <p>There are no loglines to display.</p>
+        <Link to="new">Add your own</Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="error-container">
+      I did a whoopsies.
     </div>
   );
 }

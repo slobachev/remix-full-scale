@@ -1,8 +1,8 @@
-import { redirect, type ActionArgs } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import { redirect, type ActionArgs, json, type LoaderArgs } from "@remix-run/node";
+import { Link, isRouteErrorResponse, useActionData, useRouteError } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
-import { requireUserId } from "~/utils/session.server";
+import { getUserId, requireUserId } from "~/utils/session.server";
 
 function validateLoglineContent(content: string) {
   if (content.length < 10) {
@@ -15,6 +15,16 @@ function validateLoglineName(name: string) {
     return "That logline's name is too short";
   }
 }
+
+export const loader = async ({
+  request,
+}: LoaderArgs) => {
+  const userId = await getUserId(request);
+  if (!userId) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+  return json({});
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireUserId(request);
@@ -120,6 +130,25 @@ export default function NewLoglineRoute() {
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error) && error.status === 401) {
+    return (
+      <div className="error-container">
+        <p>You must be logged in to create a joke.</p>
+        <Link to="/login">Login</Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="error-container">
+      Something unexpected went wrong. Sorry about that.
     </div>
   );
 }
