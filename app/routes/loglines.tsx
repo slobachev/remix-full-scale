@@ -78,6 +78,13 @@ export default function LoglinesRoute() {
           </div>
         </div>
       </main>
+      <footer className="loglines-footer">
+        <div className="container">
+          <Link reloadDocument to="/loglines.rss">
+            RSS
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
