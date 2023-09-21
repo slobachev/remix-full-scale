@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import { Link, isRouteErrorResponse, useActionData, useRouteError } from "@remix-run/react";
+import { Form, Link, isRouteErrorResponse, useActionData, useRouteError } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
@@ -63,7 +63,7 @@ export default function NewLoglineRoute() {
   return (
     <div>
       <p>Add your own awesome logline:</p>
-      <form method="post">
+      <Form method="post">
         <div>
           <label>
             Name:{" "}
@@ -130,7 +130,7 @@ export default function NewLoglineRoute() {
             Add
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

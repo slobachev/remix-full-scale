@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Link, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
+import { Form, Link, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
@@ -73,7 +73,7 @@ export default function LoglineRoute() {
       <p>Here's your fantastic logline:</p>
       <p>{logline.content}</p>
       <Link to=".">"{logline.name}" Permalink</Link>
-      {isOwner && <form method="post">
+      {isOwner && <Form method="post">
         <button
           className="button"
           name="_action"
@@ -82,7 +82,7 @@ export default function LoglineRoute() {
         >
           Delete
         </button>
-      </form>}
+      </Form>}
     </div>
   );
 }
