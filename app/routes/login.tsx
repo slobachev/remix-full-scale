@@ -1,6 +1,7 @@
 import type {
-  ActionArgs,
+  ActionFunctionArgs,
   LinksFunction,
+  MetaFunction,
 } from "@remix-run/node";
 import {
   Link,
@@ -16,6 +17,17 @@ import { createUserSession, login, register } from "~/utils/session.server";
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesUrl },
 ];
+
+export const meta: MetaFunction = () => {
+  const description =
+    "Login to submit your own loglines!";
+
+  return [
+    { name: "description", content: description },
+    { name: "twitter:description", content: description },
+    { title: "Loglines | Login" },
+  ];
+};
 
 function validateUsername(username: string) {
   if (username.length < 3) {
@@ -37,7 +49,7 @@ function validateUrl(url: string) {
   return "/loglines";
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const form = await request.formData();
   const loginType = form.get("loginType");
   const password = form.get("password");

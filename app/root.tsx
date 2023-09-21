@@ -1,5 +1,5 @@
-import type { LinksFunction } from "@remix-run/node";
-import { Links, LiveReload, Outlet, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { Links, LiveReload, Meta, Outlet, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import type { PropsWithChildren } from "react";
 
 import globalLargeStylesUrl from "~/styles/global-large.css";
@@ -20,7 +20,18 @@ export const links: LinksFunction = () => [
   },
 ]
 
-function Document ({ title = "Remix so great!", children }: PropsWithChildren<{ title?: string }>) {
+export const meta: MetaFunction = () => {
+  const description =
+    "Learn movies and get entertained at the same time!";
+
+  return [
+    { name: "description", content: description },
+    { name: "twitter:description", content: description },
+    { title: "Remix: So great!" },
+  ];
+};
+
+function Document ({ title, children }: PropsWithChildren<{ title?: string }>) {
   return (
     <html lang="en">
       <head>
@@ -29,7 +40,20 @@ function Document ({ title = "Remix so great!", children }: PropsWithChildren<{ 
           name="viewport"
           content="width=device-width, initial-scale=1"
         />
-        <title>{title}</title>
+        <meta name="keywords" content="Remix,loglines" />
+        <meta
+          name="twitter:image"
+          content="/img/video-camera.png"
+        />
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+        <meta name="twitter:creator" content="@remix_run" />
+        <meta name="twitter:site" content="@remix_run" />
+        <meta name="twitter:title" content="Loglines" />
+        <Meta />
+        {title ? <title>{title}</title> : null}
         <Links />
       </head>
       <body>

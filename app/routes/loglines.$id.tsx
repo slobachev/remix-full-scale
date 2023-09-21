@@ -1,11 +1,28 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const meta: MetaFunction<typeof loader> = ({
+  data,
+}) => {
+  const { description, title } = data
+    ? {
+        description: `Enjoy the "${data.logline.name}" content and much more`,
+        title: `"${data.logline.name}" content`,
+      }
+    : { description: "No logline found", title: "No logline" };
+
+  return [
+    { name: "description", content: description },
+    { name: "twitter:description", content: description },
+    { title },
+  ];
+};
+
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
   const logline = await db.logline.findUnique({
     where: { id: params.id },
@@ -21,7 +38,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export const action = async ({
   params,
   request,
-}: ActionArgs) => {
+}: ActionFunctionArgs) => {
   const form = await request.formData();
   if (form.get("_action") !== "delete") {
     throw new Response(

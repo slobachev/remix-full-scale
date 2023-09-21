@@ -1,4 +1,5 @@
-import { redirect, type ActionArgs, json, type LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
 import { Link, isRouteErrorResponse, useActionData, useRouteError } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
@@ -18,7 +19,7 @@ function validateLoglineName(name: string) {
 
 export const loader = async ({
   request,
-}: LoaderArgs) => {
+}: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
   if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
@@ -26,7 +27,7 @@ export const loader = async ({
   return json({});
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
   const data = await request.formData();
   const name = data.get('name');
