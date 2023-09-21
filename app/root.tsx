@@ -1,5 +1,5 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import { Links, LiveReload, Meta, Outlet, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import type { PropsWithChildren } from "react";
 
 import globalLargeStylesUrl from "~/styles/global-large.css";
@@ -58,6 +58,7 @@ function Document ({ title, children }: PropsWithChildren<{ title?: string }>) {
       </head>
       <body>
         {children}
+        <Scripts />
         <LiveReload />
       </body>
     </html>
@@ -74,6 +75,7 @@ export default function App() {
 
 export function ErrorBoundary () {
   const error = useRouteError();
+  console.error(error);
 
   if (isRouteErrorResponse(error)) {
     return (

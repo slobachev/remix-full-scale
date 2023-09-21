@@ -137,6 +137,7 @@ export default function NewLoglineRoute() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
+  console.error(error);
 
   if (isRouteErrorResponse(error) && error.status === 401) {
     return (

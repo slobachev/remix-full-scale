@@ -91,6 +91,7 @@ export function ErrorBoundary() {
   const { id } = useParams();
 
   const error = useRouteError();
+  console.error(error);
 
   if (isRouteErrorResponse(error) && error.status === 404) {
     return (
