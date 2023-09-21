@@ -1,9 +1,10 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
+import LoglineDisplay from "~/components/logline";
 
 export const meta: MetaFunction<typeof loader> = ({
   data,
@@ -69,21 +70,7 @@ export default function LoglineRoute() {
   const { logline, isOwner } = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <p>Here's your fantastic logline:</p>
-      <p>{logline.content}</p>
-      <Link to=".">"{logline.name}" Permalink</Link>
-      {isOwner && <Form method="post">
-        <button
-          className="button"
-          name="_action"
-          type="submit"
-          value="delete"
-        >
-          Delete
-        </button>
-      </Form>}
-    </div>
+    <LoglineDisplay logline={logline} isOwner={isOwner} />
   );
 }
 

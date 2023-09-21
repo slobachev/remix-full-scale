@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import { Form, Link, isRouteErrorResponse, useActionData, useRouteError } from "@remix-run/react";
+import { Form, Link, isRouteErrorResponse, useActionData, useNavigation, useRouteError } from "@remix-run/react";
+import LoglineDisplay from "~/components/logline";
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
@@ -60,6 +61,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function NewLoglineRoute() {
   const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+
+  if (navigation.formData) {
+    const content = navigation.formData.get("content");
+    const name = navigation.formData.get("name");
+    if (
+      typeof content === "string" &&
+      typeof name === "string" &&
+      !validateLoglineContent(content) &&
+      !validateLoglineName(name)
+    ) {
+      return (
+          <LoglineDisplay
+            canDelete={false}
+            isOwner={true}
+            logline={{ name, content }}
+          />
+        );
+    }
+  }
+
   return (
     <div>
       <p>Add your own awesome logline:</p>
