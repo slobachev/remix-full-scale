@@ -1,0 +1,92 @@
+.loglines-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
+}
+
+.loglines-header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.loglines-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loglines-header .home-link {
+  font-family: var(--font-display);
+  font-size: 3rem;
+}
+
+.loglines-header .home-link a {
+  color: var(--color-foreground);
+}
+
+.loglines-header .home-link a:hover {
+  text-decoration: none;
+}
+
+.loglines-header .logo-medium {
+  display: none;
+}
+
+.loglines-header a:hover {
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1px;
+}
+
+.loglines-header .user-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.loglines-main {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  flex: 1 1 100%;
+}
+
+.loglines-main .container {
+  display: flex;
+  gap: 1rem;
+}
+
+.loglines-list {
+  max-width: 12rem;
+}
+
+.loglines-outlet {
+  flex: 1;
+}
+
+.loglines-footer {
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media print, (min-width: 640px) {
+  .loglines-header .logo {
+    display: none;
+  }
+
+  .loglines-header .logo-medium {
+    display: block;
+  }
+
+  .loglines-main {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .loglines-main .container {
+    flex-direction: column;
+  }
+}
